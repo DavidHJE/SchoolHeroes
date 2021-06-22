@@ -231,7 +231,7 @@ public class Hero {
 		Database db = Database.getInstance();
 		Connection connexion =  db.getConnexion();
 		
-		PreparedStatement pst = connexion.prepareStatement("UPDATE public.heroes name=?, class=?, path_icon_hero=?, life=?, attack=?, defence=?, evasion=?, escape=?, experience=?, level=? WHERE id=?;");
+		PreparedStatement pst = connexion.prepareStatement("UPDATE public.heroes SET name=?, class=?, path_icon_hero=?, life=?, attack=?, defence=?, evasion=?, escape=?, experience=?, level=? WHERE id=?;");
 		pst.setString(1, this.name);
 		pst.setString(2, classHero.getTheClassName());
 		pst.setString(3, this.pathIconHero);
@@ -254,7 +254,7 @@ public class Hero {
 		Database db = Database.getInstance();
 		Connection connexion =  db.getConnexion();
 		
-		PreparedStatement pst = connexion.prepareStatement("DELETE FROM public.heroes WHERE ?;");
+		PreparedStatement pst = connexion.prepareStatement("DELETE FROM public.heroes WHERE id=?;");
 		pst.setInt(1,this.id);
 		pst.execute();
 	}
@@ -295,6 +295,11 @@ public class Hero {
 			
 			listHeroes.add(hero);
 		}
+		
+		/**
+		 * Pour sauvegarder une liste de héro
+		 */
+		// listHeroes.saveListAllHeroes();
 		
 		return listHeroes;
 	}

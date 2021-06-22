@@ -1,15 +1,19 @@
 package com.schoolHeroes.form;
 
+import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,12 +24,13 @@ import com.schoolHeroes.model.Hero;
 import com.schoolHeroes.model.TamerClassHero;
 import com.schoolHeroes.model.WarriorClassHero;
 
-public class AddHeroForm extends JDialog {
+public class EditHeroForm extends JDialog {
 
 	JPanel mainContentJPanel = new JPanel();
 	private JTextField nameField;
 	// TODO refaire correctement la combobox
-	private JComboBox<ClassHero> classHeroComboBox;
+//	private JComboBox<ClassHero> classHeroComboBox;
+	private JComboBox classHeroComboBox;
 	private JTextField pathIconHero;
 	private JFormattedTextField attackField;
 	private JFormattedTextField defenceField;
@@ -52,22 +57,9 @@ public class AddHeroForm extends JDialog {
 	private NumberFormat amountFormat;
 
 	/**
-	 * Launch the application.
-	 */
-	// public static void main(String[] args) {
-	// try {
-	// AddHeroForm dialog = new AddHeroForm();
-	// dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-	// dialog.setVisible(true);
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
-
-	/**
 	 * Create the dialog. TODO :: list des héros puis ajouter
 	 */
-	public AddHeroForm(HeroList listHeros) {
+	public EditHeroForm(HeroList listHeros, Hero hero) {
 		setTitle("Ajouter un Hero");
 		setResizable(false);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
@@ -83,25 +75,48 @@ public class AddHeroForm extends JDialog {
 
 		nameField = new JTextField();
 		nameField.setBounds(260, 15, 200, 25);
+		nameField.setText(hero.getName());
 		mainContentJPanel.add(nameField);
 
 		classLabel = new JLabel("Classe du hero");
 		classLabel.setBounds(25, 55, 200, 25);
 		mainContentJPanel.add(classLabel);
 
-		classHeroComboBox = new JComboBox<ClassHero>();
-		classHeroComboBox.setBounds(260, 55, 200, 25);
-		classHeroComboBox.addItem(new WarriorClassHero());
-		classHeroComboBox.addItem(new ArcherClassHero());
-		classHeroComboBox.addItem(new TamerClassHero());
-		mainContentJPanel.add(classHeroComboBox);
-
+		// TODO retire les commentaires
+//		classHeroComboBox = new JComboBox<ClassHero>();
+//		classHeroComboBox.setBounds(260, 55, 200, 25);
+//		classHeroComboBox.addItem(new WarriorClassHero());
+//		classHeroComboBox.addItem(new ArcherClassHero());
+//		classHeroComboBox.addItem(new TamerClassHero());
+//		classHeroComboBox.setSelectedItem(hero.getClassHero().getName()); // not works
+//		mainContentJPanel.add(classHeroComboBox);
+		
+		
+//		WarriorClassHero warrior = new WarriorClassHero();
+//		ArcherClassHero archer = new ArcherClassHero();
+//		TamerClassHero tamer = new TamerClassHero();
+//		ClassHero[] classHeroes = new ClassHero[] {warrior, archer, tamer};
+//		classHeroComboBox = new JComboBox((new DefaultComboBoxModel(classHeroes)));
+//		classHeroComboBox.setRenderer(new DefaultListCellRenderer() {
+//            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+//                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+//                if(value instanceof ClassHero){
+//                	ClassHero classHero = (ClassHero) value;
+//                    setText(classHero.getName());
+//                }
+//                return this;
+//            }
+//        } );
+//		classHeroComboBox.setBounds(260, 55, 200, 25);
+//		mainContentJPanel.add(classHeroComboBox);
+		
 		pathIconHeroLabel = new JLabel("Icon du hero");
 		pathIconHeroLabel.setBounds(25, 95, 200, 25);
 		mainContentJPanel.add(pathIconHeroLabel);
 
 		pathIconHero = new JTextField(); // File chose img
 		pathIconHero.setBounds(260, 95, 200, 25);
+		pathIconHero.setText(hero.getPathIconHero());
 		mainContentJPanel.add(pathIconHero);
 
 		attackLabel = new JLabel("Attaque du hero"); // File chose img
@@ -110,6 +125,7 @@ public class AddHeroForm extends JDialog {
 
 		attackField = new JFormattedTextField(amountFormat);
 		attackField.setBounds(260, 135, 200, 25);
+		attackField.setText(Integer.toString(hero.getAttack()));
 		mainContentJPanel.add(attackField);
 
 		defenceLabel = new JLabel("Défense du hero"); // File chose img
@@ -118,6 +134,7 @@ public class AddHeroForm extends JDialog {
 
 		defenceField = new JFormattedTextField(amountFormat);
 		defenceField.setBounds(260, 175, 200, 25);
+		defenceField.setText(Integer.toString(hero.getDefence()));
 		mainContentJPanel.add(defenceField);
 
 		evasionLabel = new JLabel("Esquive du hero"); // File chose img
@@ -126,6 +143,7 @@ public class AddHeroForm extends JDialog {
 
 		evasionField = new JFormattedTextField(amountFormat);
 		evasionField.setBounds(260, 215, 200, 25);
+		evasionField.setText(Integer.toString(hero.getEvasion()));
 		mainContentJPanel.add(evasionField);
 
 		escapeLabel = new JLabel("Vitesse de fuite du hero"); // File chose img
@@ -134,6 +152,7 @@ public class AddHeroForm extends JDialog {
 
 		escapeField = new JFormattedTextField(amountFormat);
 		escapeField.setBounds(260, 255, 200, 25);
+		escapeField.setText(Integer.toString(hero.getEscape()));
 		mainContentJPanel.add(escapeField);
 
 		lifeLabel = new JLabel("Point de vie du hero"); // File chose img
@@ -142,6 +161,7 @@ public class AddHeroForm extends JDialog {
 
 		lifeField = new JFormattedTextField(amountFormat);
 		lifeField.setBounds(260, 295, 200, 25);
+		lifeField.setText(Integer.toString(hero.getLife()));
 		mainContentJPanel.add(lifeField);
 
 		experienceLabel = new JLabel("Point d'expérience du hero"); // File chose img
@@ -150,6 +170,7 @@ public class AddHeroForm extends JDialog {
 
 		experienceField = new JFormattedTextField(amountFormat);
 		experienceField.setBounds(260, 335, 200, 25);
+		experienceField.setText(Integer.toString(hero.getExperience()));
 		mainContentJPanel.add(experienceField);
 
 		levelLabel = new JLabel("Niveau du hero"); // File chose img
@@ -158,9 +179,10 @@ public class AddHeroForm extends JDialog {
 
 		levelField = new JFormattedTextField(amountFormat);
 		levelField.setBounds(260, 375, 200, 25);
+		levelField.setText(Integer.toString(hero.getLevel()));
 		mainContentJPanel.add(levelField);
 
-		valideBtn = new JButton("Ajouter Hero");
+		valideBtn = new JButton("Modier Hero");
 		valideBtn.setBounds(25, 430, 200, 25);
 		mainContentJPanel.add(valideBtn);
 
@@ -168,32 +190,31 @@ public class AddHeroForm extends JDialog {
 		cancelBtn.setBounds(260, 430, 200, 25);
 		mainContentJPanel.add(cancelBtn);
 
-		addHeroListenerList(listHeros);
+		addHeroListenerList(listHeros, hero);
 	}
 
-	private void addHeroListenerList(final HeroList listHeros) {
+	private void addHeroListenerList(final HeroList listHeros, final Hero hero) {
 
 		valideBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// TODO faire les vérifications puis ajouter toute les champs
-				// essayer d'autre facon de faire
-
 				if (nameField.getText().equals("")) {
 					JOptionPane.showMessageDialog(mainContentJPanel, "Le nom du héros ne doit pas être vide !",
 							"Erreur", JOptionPane.ERROR_MESSAGE);
 					return;
-				}
-
-				ClassHero classHero;
-				if (classHeroComboBox.getSelectedItem() instanceof ClassHero) {
-					classHero = (ClassHero) classHeroComboBox.getSelectedItem();
 				} else {
-					JOptionPane.showMessageDialog(mainContentJPanel, "Vous n'avez pas sélectionné une classe valide !",
-							"Erreur", JOptionPane.ERROR_MESSAGE);
-					return;
+					hero.setName(nameField.getText());
 				}
 
-				Hero hero = new Hero(nameField.getText(), classHero);
+				// TODO retire les commentaires
+//				ClassHero classHero;
+//				if (classHeroComboBox.getSelectedItem() instanceof ClassHero) {
+//					classHero = (ClassHero) classHeroComboBox.getSelectedItem();
+//					hero.setClassHero(classHero);
+//				} else {
+//					JOptionPane.showMessageDialog(mainContentJPanel, "Vous n'avez pas sélectionné une classe valide !",
+//							"Erreur", JOptionPane.ERROR_MESSAGE);
+//					return;
+//				}
 
 				if (!pathIconHero.getText().equals("")) {
 					hero.setPathIconHero(pathIconHero.getText());
@@ -278,24 +299,13 @@ public class AddHeroForm extends JDialog {
 				}
 
 				try {
-					hero.createAndSaveToDB();
-					listHeros.add(hero);
+					hero.updateAndSaveToDB();
+					listHeros.notifyUptadeHero();
 
-					JOptionPane.showMessageDialog(mainContentJPanel, "Le héros a été créé avec succès !");
+					JOptionPane.showMessageDialog(mainContentJPanel, "Le héros a été modifier avec succès !");
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-
-				nameField.setText("");
-				classHeroComboBox.setSelectedIndex(0);
-				pathIconHero.setText("");
-				attackField.setText("");
-				defenceField.setText("");
-				evasionField.setText("");
-				escapeField.setText("");
-				lifeField.setText("");
-				experienceField.setText("");
-				levelField.setText("");
 
 			}
 		});

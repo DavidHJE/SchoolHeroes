@@ -26,7 +26,8 @@ public class HeroTableModel extends AbstractTableModel {
 	}
 	
 	public HeroTableModel(List<Hero> heroes) {
-		listHeroes = new ArrayList<Hero>(heroes);
+		// listHeroes = new ArrayList<Hero>(heroes);
+		listHeroes = heroes;
 	}
 
 	public int getRowCount() {
@@ -98,6 +99,5 @@ public class HeroTableModel extends AbstractTableModel {
 		// super.setValueAt(aValue, rowIndex, columnIndex);
 		return;
 	}
-
 
 }
