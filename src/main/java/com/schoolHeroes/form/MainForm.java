@@ -29,9 +29,11 @@ public class MainForm extends JFrame {
 		HeroPanel heroPanel = new HeroPanel();
 		heroPanel.setLayout(null);
 		
-		System.out.println(user);
-
+		ProfilePanel profilePanel = new ProfilePanel();
+		profilePanel.setLayout(null);
+		
 		tabbedPane.add("Heros", heroPanel);
+		tabbedPane.add("Profil", profilePanel);
 
 	}
 }
