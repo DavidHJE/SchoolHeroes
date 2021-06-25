@@ -86,16 +86,16 @@ public class ProfilePanel extends JPanel {
 		descriptionField.setLineWrap(true);
 		descriptionScrollPane.setViewportView(descriptionField);
 		
-		changePasswordButton = new JButton("Changer de mot de passe");
-		changePasswordButton.setBounds(225, 500, 150, 25);
+		changePasswordButton = new JButton("Modifier mot de passe");
+		changePasswordButton.setBounds(175, 500, 200, 25);
 		add(changePasswordButton);
 		
 		editButton = new JButton("Modifier");
-		editButton.setBounds(425, 500, 150, 25);
+		editButton.setBounds(400, 500, 200, 25);
 		add(editButton);
 		
 		deleteButton = new JButton("Supprimer");
-		deleteButton.setBounds(625, 500, 150, 25);
+		deleteButton.setBounds(625, 500, 200, 25);
 		deleteButton.setBackground(Color.RED.brighter());
 		deleteButton.setForeground(Color.WHITE);
 		add(deleteButton);
