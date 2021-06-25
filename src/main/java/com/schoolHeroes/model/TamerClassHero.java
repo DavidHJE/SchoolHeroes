@@ -1,6 +1,6 @@
 package com.schoolHeroes.model;
 
-public class TamerClassHero extends ClassHero implements ActionsHero {
+public class TamerClassHero extends ClassHero {
 	private String name = "Donpteur";
 	private String theClassName = "com.schoolHeroes.model.TamerClassHero";
 
@@ -13,12 +13,12 @@ public class TamerClassHero extends ClassHero implements ActionsHero {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getTheClassName() {
 		return theClassName;
 	}
-	
+
 	public String attack(int attack) {
 		if ((attack * this.ratioAttack) < 40) {
 			return "Attaque raté";
@@ -47,18 +47,12 @@ public class TamerClassHero extends ClassHero implements ActionsHero {
 		if ((escape + this.ratioEscape) < 40) {
 			return "fuite annulé";
 		}
-
+		
 		return "escape tamer";
 	}
-
 
 	@Override
 	public String skill1(Hero hero) {
 		return hero.getName() + "Ok invoquation !";
-	}
-
-	@Override
-	public String toString() {
-		return this.name;
 	}
 }

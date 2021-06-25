@@ -1,16 +1,13 @@
 package com.schoolHeroes.model;
 
-import java.awt.List;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
-import javax.swing.event.ListSelectionListener;
 
 import com.schoolHeroes.form.HeroList;
 
@@ -29,17 +26,13 @@ public class Hero {
 	private int level = 1;
 	private int experience = 0;
 
-	
 	public Hero(String name, ClassHero classHero) {
 		this.name = name;
 		this.classHero = classHero;
 	}
-	
-	
+
 	/**
-	 * 
 	 * Getters and Setters
-	 * 
 	 */
 	public String getName() {
 		return name;
@@ -56,7 +49,7 @@ public class Hero {
 	public void setClassHero(ClassHero classHero) {
 		this.classHero = classHero;
 	}
-	
+
 	public String getPathIconHero() {
 		return pathIconHero;
 	}
@@ -138,9 +131,7 @@ public class Hero {
 	}
 
 	/**
-	 * 
 	 * Actions for Heroes
-	 * 
 	 */
 	public String attack() {
 		return classHero.attack(this.attack);
@@ -177,7 +168,6 @@ public class Hero {
 	public String skill5() {
 		return classHero.skill5(this);
 	}
-	
 
 	@Override
 	public String toString() {
@@ -186,24 +176,18 @@ public class Hero {
 				+ ", escape=" + escape + ", life=" + life + ", level=" + level + ", experience=" + experience + "]";
 	}
 
-	
-	/**
-	 * Ajoute un nouveau utilisateur a la base de donnée
-	 * @throws Exception
-	 */
 	public void createAndSaveToDB() throws Exception {
 		Database db = Database.getInstance();
-		Connection connexion =  db.getConnexion();
-		
-		int lastId = 1;
-		lastId = db.getTheNextIdHoroes();
+		Connection connexion = db.getConnexion();
+
+		Statement st = connexion.createStatement();
+		ResultSet result = st.executeQuery("SELECT max(id) FROM public.heroes;");
+		result.next();
+		int lastId = result.getInt(1) + 1;
 		this.id = lastId;
-		
-		if(this.id == 0) {
-			throw new Exception("L'id ne peut pas être null");
-		}
-		
-		PreparedStatement pst = connexion.prepareStatement("INSERT INTO public.heroes(name, id, class, path_icon_hero, life, attack, defence, evasion, escape, experience, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
+
+		PreparedStatement pst = connexion.prepareStatement(
+				"INSERT INTO public.heroes(name, id, class, path_icon_hero, life, attack, defence, evasion, escape, experience, level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);");
 		pst.setString(1, this.name);
 		pst.setInt(2, this.id);
 		pst.setString(3, classHero.getTheClassName());
@@ -213,25 +197,21 @@ public class Hero {
 		pst.setInt(7, this.defence);
 		pst.setInt(8, this.evasion);
 		pst.setInt(9, this.escape);
-		pst.setInt(10,this.experience);
-		pst.setInt(11,this.level);
-        pst.execute();
+		pst.setInt(10, this.experience);
+		pst.setInt(11, this.level);
+		pst.execute();
 	}
-	
-	/**
-	 * Enregistré la modification a la base de donnée
-	 * @throws Exception
-	 */
-	
+
 	public void updateAndSaveToDB() throws Exception {
-		if(this.id == 0) {
-			throw new Exception("it's don't have id");
+		if (this.id == 0) {
+			throw new Exception("This hero don't have a id");
 		}
-		
+
 		Database db = Database.getInstance();
-		Connection connexion =  db.getConnexion();
-		
-		PreparedStatement pst = connexion.prepareStatement("UPDATE public.heroes SET name=?, class=?, path_icon_hero=?, life=?, attack=?, defence=?, evasion=?, escape=?, experience=?, level=? WHERE id=?;");
+		Connection connexion = db.getConnexion();
+
+		PreparedStatement pst = connexion.prepareStatement(
+				"UPDATE public.heroes SET name=?, class=?, path_icon_hero=?, life=?, attack=?, defence=?, evasion=?, escape=?, experience=?, level=? WHERE id=?;");
 		pst.setString(1, this.name);
 		pst.setString(2, classHero.getTheClassName());
 		pst.setString(3, this.pathIconHero);
@@ -240,47 +220,38 @@ public class Hero {
 		pst.setInt(6, this.defence);
 		pst.setInt(7, this.evasion);
 		pst.setInt(8, this.escape);
-		pst.setInt(9,this.experience);
-		pst.setInt(10,this.level);
-		pst.setInt(11,this.id);
-        pst.execute();
-	}
-	
-	public void deleteFromDB() throws Exception {
-		if(this.id == 0) {
-			throw new Exception("it's don't have id");
-		}
-		
-		Database db = Database.getInstance();
-		Connection connexion =  db.getConnexion();
-		
-		PreparedStatement pst = connexion.prepareStatement("DELETE FROM public.heroes WHERE id=?;");
-		pst.setInt(1,this.id);
+		pst.setInt(9, this.experience);
+		pst.setInt(10, this.level);
+		pst.setInt(11, this.id);
 		pst.execute();
 	}
 
-	/**
-	 * Liste des heroes dans la base de donnée
-	 * @return
-	 * @throws SQLException
-	 * @throws InstantiationException
-	 * @throws IllegalAccessException
-	 * @throws IllegalArgumentException
-	 * @throws InvocationTargetException
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws ClassNotFoundException
-	 */
-	public static HeroList getAllHero() throws SQLException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+	public void deleteFromDB() throws Exception {
+		if (this.id == 0) {
+			throw new Exception("This hero don't have a id");
+		}
+
 		Database db = Database.getInstance();
-		Connection connexion =  db.getConnexion();
-		
+		Connection connexion = db.getConnexion();
+
+		PreparedStatement pst = connexion.prepareStatement("DELETE FROM public.heroes WHERE id=?;");
+		pst.setInt(1, this.id);
+		pst.execute();
+	}
+
+	public static HeroList getAllHero()
+			throws SQLException, InstantiationException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException, NoSuchMethodException, SecurityException, ClassNotFoundException {
+		Database db = Database.getInstance();
+		Connection connexion = db.getConnexion();
+
 		Statement st = connexion.createStatement();
 		ResultSet result = st.executeQuery("SELECT * FROM public.heroes");
 		HeroList listHeroes = new HeroList();
-		
+
 		while (result.next()) {
-			ClassHero classHero= (ClassHero) Class.forName(result.getString("class")).getDeclaredConstructor().newInstance();
+			ClassHero classHero = (ClassHero) Class.forName(result.getString("class")).getDeclaredConstructor()
+					.newInstance();
 
 			Hero hero = new Hero(result.getString("name"), classHero);
 			hero.setId(result.getInt("id"));
@@ -292,16 +263,11 @@ public class Hero {
 			hero.setEscape(result.getInt("escape"));
 			hero.setExperience(result.getInt("experience"));
 			hero.setLevel(result.getInt("level"));
-			
+
 			listHeroes.add(hero);
 		}
-		
-		/**
-		 * Pour sauvegarder une liste de héro
-		 */
-		// listHeroes.saveListAllHeroes();
-		
+
 		return listHeroes;
 	}
-	
+
 }

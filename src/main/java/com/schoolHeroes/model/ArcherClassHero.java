@@ -1,6 +1,6 @@
 package com.schoolHeroes.model;
 
-public class ArcherClassHero extends ClassHero implements ActionsHero {
+public class ArcherClassHero extends ClassHero {
 	private String name = "Archer";
 	private String theClassName = "com.schoolHeroes.model.ArcherClassHero";
 
@@ -13,12 +13,12 @@ public class ArcherClassHero extends ClassHero implements ActionsHero {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String getTheClassName() {
 		return theClassName;
 	}
-	
+
 	public String attack(int attack) {
 		if ((attack * this.ratioAttack) < 40) {
 			return "Attaque raté";
@@ -49,11 +49,5 @@ public class ArcherClassHero extends ClassHero implements ActionsHero {
 		}
 
 		return "escape archer";
-	}
-
-
-	@Override
-	public String toString() {
-		return this.name;
 	}
 }

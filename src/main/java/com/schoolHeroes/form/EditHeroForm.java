@@ -1,19 +1,15 @@
 package com.schoolHeroes.form;
 
-import java.awt.Component;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -24,43 +20,48 @@ import com.schoolHeroes.model.Hero;
 import com.schoolHeroes.model.TamerClassHero;
 import com.schoolHeroes.model.WarriorClassHero;
 
+@SuppressWarnings("serial")
 public class EditHeroForm extends JDialog {
 
 	JPanel mainContentJPanel = new JPanel();
-	private JTextField nameField;
-	// TODO refaire correctement la combobox
-//	private JComboBox<ClassHero> classHeroComboBox;
-	private JComboBox classHeroComboBox;
-	private JTextField pathIconHero;
-	private JFormattedTextField attackField;
-	private JFormattedTextField defenceField;
-	private JFormattedTextField evasionField;
-	private JFormattedTextField escapeField;
-	private JFormattedTextField lifeField;
-	private JFormattedTextField experienceField;
-	private JFormattedTextField levelField;
 
 	private JLabel nameLabel;
+	private JTextField nameField;
+
 	private JLabel classLabel;
+	private JComboBox<ClassHero> classHeroComboBox;
+
 	private JLabel pathIconHeroLabel;
+	private JTextField pathIconHero;
+
 	private JLabel attackLabel;
+	private JFormattedTextField attackField;
+
 	private JLabel defenceLabel;
+	private JFormattedTextField defenceField;
+
 	private JLabel evasionLabel;
+	private JFormattedTextField evasionField;
+
 	private JLabel escapeLabel;
+	private JFormattedTextField escapeField;
+
 	private JLabel lifeLabel;
+	private JFormattedTextField lifeField;
+
 	private JLabel experienceLabel;
+	private JFormattedTextField experienceField;
+
 	private JLabel levelLabel;
+	private JFormattedTextField levelField;
 
 	private JButton valideBtn;
 	private JButton cancelBtn;
 
 	private NumberFormat amountFormat;
 
-	/**
-	 * Create the dialog. TODO :: list des héros puis ajouter
-	 */
 	public EditHeroForm(HeroList listHeros, Hero hero) {
-		setTitle("Ajouter un Hero");
+		setTitle("Modifer un Hero");
 		setResizable(false);
 		setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		setSize(500, 520);
@@ -69,7 +70,7 @@ public class EditHeroForm extends JDialog {
 		mainContentJPanel.setLayout(null);
 		setContentPane(mainContentJPanel);
 
-		nameLabel = new JLabel("Nom du hero");
+		nameLabel = new JLabel("Nom");
 		nameLabel.setBounds(25, 15, 200, 25);
 		mainContentJPanel.add(nameLabel);
 
@@ -78,48 +79,36 @@ public class EditHeroForm extends JDialog {
 		nameField.setText(hero.getName());
 		mainContentJPanel.add(nameField);
 
-		classLabel = new JLabel("Classe du hero");
+		classLabel = new JLabel("Classe");
 		classLabel.setBounds(25, 55, 200, 25);
 		mainContentJPanel.add(classLabel);
 
-		// TODO retire les commentaires
-//		classHeroComboBox = new JComboBox<ClassHero>();
-//		classHeroComboBox.setBounds(260, 55, 200, 25);
-//		classHeroComboBox.addItem(new WarriorClassHero());
-//		classHeroComboBox.addItem(new ArcherClassHero());
-//		classHeroComboBox.addItem(new TamerClassHero());
-//		classHeroComboBox.setSelectedItem(hero.getClassHero().getName()); // not works
-//		mainContentJPanel.add(classHeroComboBox);
+		WarriorClassHero warrior = new WarriorClassHero();
+		ArcherClassHero archer = new ArcherClassHero();
+		TamerClassHero tamer = new TamerClassHero();
+		ClassHero[] classHeroes = new ClassHero[] { warrior, archer, tamer };
+		classHeroComboBox = new JComboBox<ClassHero>(new DefaultComboBoxModel<ClassHero>(classHeroes));
+		classHeroComboBox.setRenderer(new HeroClassRenderer());
+
+		for (ClassHero classHero : classHeroes) {
+			if (classHero.getName() == hero.getClassHero().getName()) {
+				classHeroComboBox.setSelectedItem(classHero);
+			}
+		}
 		
-		
-//		WarriorClassHero warrior = new WarriorClassHero();
-//		ArcherClassHero archer = new ArcherClassHero();
-//		TamerClassHero tamer = new TamerClassHero();
-//		ClassHero[] classHeroes = new ClassHero[] {warrior, archer, tamer};
-//		classHeroComboBox = new JComboBox((new DefaultComboBoxModel(classHeroes)));
-//		classHeroComboBox.setRenderer(new DefaultListCellRenderer() {
-//            public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-//                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-//                if(value instanceof ClassHero){
-//                	ClassHero classHero = (ClassHero) value;
-//                    setText(classHero.getName());
-//                }
-//                return this;
-//            }
-//        } );
-//		classHeroComboBox.setBounds(260, 55, 200, 25);
-//		mainContentJPanel.add(classHeroComboBox);
-		
-		pathIconHeroLabel = new JLabel("Icon du hero");
+		classHeroComboBox.setBounds(260, 55, 200, 25);
+		mainContentJPanel.add(classHeroComboBox);
+
+		pathIconHeroLabel = new JLabel("Icon");
 		pathIconHeroLabel.setBounds(25, 95, 200, 25);
 		mainContentJPanel.add(pathIconHeroLabel);
 
-		pathIconHero = new JTextField(); // File chose img
+		pathIconHero = new JTextField();
 		pathIconHero.setBounds(260, 95, 200, 25);
 		pathIconHero.setText(hero.getPathIconHero());
 		mainContentJPanel.add(pathIconHero);
 
-		attackLabel = new JLabel("Attaque du hero"); // File chose img
+		attackLabel = new JLabel("Attaque");
 		attackLabel.setBounds(25, 135, 200, 25);
 		mainContentJPanel.add(attackLabel);
 
@@ -128,7 +117,7 @@ public class EditHeroForm extends JDialog {
 		attackField.setText(Integer.toString(hero.getAttack()));
 		mainContentJPanel.add(attackField);
 
-		defenceLabel = new JLabel("Défense du hero"); // File chose img
+		defenceLabel = new JLabel("Défense");
 		defenceLabel.setBounds(25, 175, 200, 25);
 		mainContentJPanel.add(defenceLabel);
 
@@ -137,7 +126,7 @@ public class EditHeroForm extends JDialog {
 		defenceField.setText(Integer.toString(hero.getDefence()));
 		mainContentJPanel.add(defenceField);
 
-		evasionLabel = new JLabel("Esquive du hero"); // File chose img
+		evasionLabel = new JLabel("Esquive");
 		evasionLabel.setBounds(25, 215, 200, 25);
 		mainContentJPanel.add(evasionLabel);
 
@@ -146,7 +135,7 @@ public class EditHeroForm extends JDialog {
 		evasionField.setText(Integer.toString(hero.getEvasion()));
 		mainContentJPanel.add(evasionField);
 
-		escapeLabel = new JLabel("Vitesse de fuite du hero"); // File chose img
+		escapeLabel = new JLabel("Vitesse de fuite");
 		escapeLabel.setBounds(25, 255, 200, 25);
 		mainContentJPanel.add(escapeLabel);
 
@@ -155,7 +144,7 @@ public class EditHeroForm extends JDialog {
 		escapeField.setText(Integer.toString(hero.getEscape()));
 		mainContentJPanel.add(escapeField);
 
-		lifeLabel = new JLabel("Point de vie du hero"); // File chose img
+		lifeLabel = new JLabel("Point de vie");
 		lifeLabel.setBounds(25, 295, 200, 25);
 		mainContentJPanel.add(lifeLabel);
 
@@ -164,7 +153,7 @@ public class EditHeroForm extends JDialog {
 		lifeField.setText(Integer.toString(hero.getLife()));
 		mainContentJPanel.add(lifeField);
 
-		experienceLabel = new JLabel("Point d'expérience du hero"); // File chose img
+		experienceLabel = new JLabel("Point d'expérience");
 		experienceLabel.setBounds(25, 335, 200, 25);
 		mainContentJPanel.add(experienceLabel);
 
@@ -173,7 +162,7 @@ public class EditHeroForm extends JDialog {
 		experienceField.setText(Integer.toString(hero.getExperience()));
 		mainContentJPanel.add(experienceField);
 
-		levelLabel = new JLabel("Niveau du hero"); // File chose img
+		levelLabel = new JLabel("Niveau");
 		levelLabel.setBounds(25, 375, 200, 25);
 		mainContentJPanel.add(levelLabel);
 
@@ -182,7 +171,7 @@ public class EditHeroForm extends JDialog {
 		levelField.setText(Integer.toString(hero.getLevel()));
 		mainContentJPanel.add(levelField);
 
-		valideBtn = new JButton("Modier Hero");
+		valideBtn = new JButton("Modifier");
 		valideBtn.setBounds(25, 430, 200, 25);
 		mainContentJPanel.add(valideBtn);
 
@@ -197,7 +186,7 @@ public class EditHeroForm extends JDialog {
 
 		valideBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (nameField.getText().equals("")) {
+				if (nameField.getText().trim().equals("")) {
 					JOptionPane.showMessageDialog(mainContentJPanel, "Le nom du héros ne doit pas être vide !",
 							"Erreur", JOptionPane.ERROR_MESSAGE);
 					return;
@@ -205,16 +194,15 @@ public class EditHeroForm extends JDialog {
 					hero.setName(nameField.getText());
 				}
 
-				// TODO retire les commentaires
-//				ClassHero classHero;
-//				if (classHeroComboBox.getSelectedItem() instanceof ClassHero) {
-//					classHero = (ClassHero) classHeroComboBox.getSelectedItem();
-//					hero.setClassHero(classHero);
-//				} else {
-//					JOptionPane.showMessageDialog(mainContentJPanel, "Vous n'avez pas sélectionné une classe valide !",
-//							"Erreur", JOptionPane.ERROR_MESSAGE);
-//					return;
-//				}
+				ClassHero classHero;
+				if (classHeroComboBox.getSelectedItem() instanceof ClassHero) {
+					classHero = (ClassHero) classHeroComboBox.getSelectedItem();
+					hero.setClassHero(classHero);
+				} else {
+					JOptionPane.showMessageDialog(mainContentJPanel, "Vous n'avez pas sélectionné une classe valide !",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				if (!pathIconHero.getText().equals("")) {
 					hero.setPathIconHero(pathIconHero.getText());
