@@ -9,10 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
+
+import com.schoolHeroes.model.User;
+
 import javax.swing.JButton;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
@@ -75,9 +80,24 @@ public class LoginForm extends JFrame {
 	public void loginListernerList() {
 		btnConnexion.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainForm frame = new MainForm();
-				dispose();
-				frame.setVisible(true);
+				if (!usernameField.getText().trim().equals("") && passwordField.getPassword().length != 0) {
+					try {
+						User user = User.getUser(usernameField.getText(), passwordField.getPassword());
+						
+						System.out.println(user);
+						
+						if(user == null) {
+							JOptionPane.showMessageDialog(contentPane, "Nom d'utilisateur ou mot de passe incorrecte !",
+									"Erreur", JOptionPane.ERROR_MESSAGE);
+						} else {
+							MainForm frame = new MainForm(user);
+							dispose();
+							frame.setVisible(true);
+						}
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
 		});
 		

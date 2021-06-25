@@ -68,25 +68,6 @@ public class InscriptionForm extends JFrame {
 
 	private JButton inscriptionButton;
 	private JLabel connexionLink;
-	
-	
-	private User user = new User();
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					InscriptionForm frame = new InscriptionForm();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	public InscriptionForm() {
 		setResizable(false);
@@ -175,6 +156,8 @@ public class InscriptionForm extends JFrame {
 	public void inscriptionListenerList() {
 		inscriptionButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				User user = new User();
+				
 				if (usernameField.getText().trim().equals("")) {
 					JOptionPane.showMessageDialog(contentPane, "Le nom d'utilisateur ne doit pas être vide !",
 							"Erreur", JOptionPane.ERROR_MESSAGE);
@@ -236,7 +219,7 @@ public class InscriptionForm extends JFrame {
 					user.setPassword(hashPassword);
 					Arrays.fill(password, '0');
 				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(contentPane, "Impossible de hasher le mot de passe !",
+					JOptionPane.showMessageDialog(contentPane, "Impossible de hasher le mot de passe ! Veuillez Reésayer !",
 							"Erreur", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -245,7 +228,12 @@ public class InscriptionForm extends JFrame {
 				user.setCreatedAt(date);
 				try {
 					user.createAndSaveToDB();
+					user.setPassword(null);
 					JOptionPane.showMessageDialog(contentPane, "Enrregistrement réussi !");
+					
+					MainForm frame = new MainForm(user);
+					dispose();
+					frame.setVisible(true);
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}

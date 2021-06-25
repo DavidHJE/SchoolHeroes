@@ -5,13 +5,15 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
+import com.schoolHeroes.model.User;
+
 @SuppressWarnings("serial")
 public class MainForm extends JFrame {
 
 	private JPanel contentPane;
 	private final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 
-	public MainForm() {
+	public MainForm(User user) {
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setSize(1000, 640);
@@ -26,6 +28,8 @@ public class MainForm extends JFrame {
 
 		HeroPanel heroPanel = new HeroPanel();
 		heroPanel.setLayout(null);
+		
+		System.out.println(user);
 
 		tabbedPane.add("Heros", heroPanel);
 

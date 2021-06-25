@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 public class User {
 
 	private int id;
@@ -33,10 +35,6 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getUsername() {
-		return username;
 	}
 
 	public void setUsername(String username) {
@@ -185,6 +183,38 @@ public class User {
 		}
 		
 	}
+	
+	public static User getUser(String username, char[] password) throws Exception {
+		Database db = Database.getInstance();
+		Connection connexion = db.getConnexion();
+		
+		PreparedStatement pst = connexion.prepareStatement("SELECT * FROM public.users WHERE username=?;");
+		pst.setString(1, username);
+		ResultSet resultSet = pst.executeQuery();
+		
+		if(resultSet.next()) {
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			boolean isCorrectPassword = bCryptPasswordEncoder.matches(new String(password), resultSet.getString("password"));
+			
+			if(isCorrectPassword) {
+				User user = new User();
+				user.setId(resultSet.getInt("id"));
+				user.setFirstName(resultSet.getString("first_name"));
+				user.setLastName(resultSet.getString("last_name"));
+				user.setUsername(resultSet.getString("username"));
+				user.setDescription(resultSet.getString("description"));
+				user.setEmail(resultSet.getString("email"));
+				user.setCreatedAt(resultSet.getDate("created_at"));
+				
+				return user;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	}
+	
 
 	@Override
 	public String toString() {
