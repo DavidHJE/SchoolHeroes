@@ -1,4 +1,6 @@
-package com.schoolHeroes.model;
+package com.schoolHeroes.model.interfaceModel;
+
+import com.schoolHeroes.model.Hero;
 
 public interface ActionsHero {
 	public String attack(int attack);

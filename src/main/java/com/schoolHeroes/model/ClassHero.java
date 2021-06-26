@@ -1,5 +1,7 @@
 package com.schoolHeroes.model;
 
+import com.schoolHeroes.model.interfaceModel.ActionsHero;
+
 public abstract class ClassHero implements ActionsHero {
 	protected String name;
 	protected String theClassName;

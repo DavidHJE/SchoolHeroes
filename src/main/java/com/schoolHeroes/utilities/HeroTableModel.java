@@ -1,4 +1,4 @@
-package com.schoolHeroes.form;
+package com.schoolHeroes.utilities;
 
 import java.util.List;
 

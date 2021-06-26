@@ -1,4 +1,4 @@
-package com.schoolHeroes.form;
+package com.schoolHeroes.model;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -8,7 +8,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import com.schoolHeroes.model.Hero;
+
+import com.schoolHeroes.model.interfaceModel.Observer;
+import com.schoolHeroes.model.interfaceModel.Sujet;
 
 public class HeroList implements List<Hero>, Sujet {
 	private ArrayList<Hero> heroesList = new ArrayList<Hero>();

@@ -2,8 +2,7 @@ package com.schoolHeroes;
 
 import java.awt.EventQueue;
 
-import com.schoolHeroes.form.LoginForm;
-import com.schoolHeroes.form.MainForm;
+import com.schoolHeroes.view.user.LoginForm;
 
 public class App {
 	public static void main(String[] args) {

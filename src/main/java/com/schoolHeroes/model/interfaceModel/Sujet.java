@@ -1,4 +1,4 @@
-package com.schoolHeroes.form;
+package com.schoolHeroes.model.interfaceModel;
 
 public interface Sujet {
 

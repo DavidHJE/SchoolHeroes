@@ -1,14 +1,11 @@
 package com.schoolHeroes.model;
 
-import java.security.Identity;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class User {
@@ -154,76 +151,78 @@ public class User {
 		pst.setInt(1, this.id);
 		pst.execute();
 	}
-	
+
 	public boolean isCorrectPassword(char[] password) throws Exception {
 		if (this.id == 0) {
 			throw new Exception("This user don't have a id");
 		}
-		
+
 		Database db = Database.getInstance();
 		Connection connexion = db.getConnexion();
-		
+
 		PreparedStatement pst = connexion.prepareStatement("SELECT password FROM public.users WHERE id=?;");
 		pst.setInt(1, this.id);
 		ResultSet resultSet = pst.executeQuery();
-		
-		if(resultSet.next())  {
+
+		if (resultSet.next()) {
 			String passwordDb = resultSet.getString("password");
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-			
+
 			return bCryptPasswordEncoder.matches(new String(password), passwordDb);
 
 		} else {
 			throw new Exception("Utilisateur inconnu");
 		}
 	}
-	
+
 	public static boolean isUsernameUnique(String username) throws Exception {
 		Database db = Database.getInstance();
 		Connection connexion = db.getConnexion();
-		
+
 		PreparedStatement pst = connexion.prepareStatement("SELECT username FROM public.users WHERE username=?;");
 		pst.setString(1, username);
 		ResultSet resultSet = pst.executeQuery();
-		
-		if(resultSet.next())  {
+
+		if (resultSet.next()) {
 			return false;
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	public static boolean isUsernameUnique(String username, int id) throws Exception {
 		Database db = Database.getInstance();
 		Connection connexion = db.getConnexion();
-		
-		PreparedStatement pst = connexion.prepareStatement("SELECT username FROM public.users WHERE username=? AND id!=?;");
+
+		PreparedStatement pst = connexion
+				.prepareStatement("SELECT username FROM public.users WHERE username=? AND id!=?;");
 		pst.setString(1, username);
 		pst.setInt(2, id);
 		ResultSet resultSet = pst.executeQuery();
-		
-		if(resultSet.next())  {
+
+		if (resultSet.next()) {
 			return false;
 		} else {
 			return true;
 		}
-		
+
 	}
-	
+
 	public static User getUser(String username, char[] password) throws Exception {
 		Database db = Database.getInstance();
 		Connection connexion = db.getConnexion();
-		
+
 		PreparedStatement pst = connexion.prepareStatement("SELECT * FROM public.users WHERE username=?;");
 		pst.setString(1, username);
 		ResultSet resultSet = pst.executeQuery();
-		
-		if(resultSet.next()) {
+
+		if (resultSet.next()) {
 			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-			boolean isCorrectPassword = bCryptPasswordEncoder.matches(new String(password), resultSet.getString("password"));
-			
-			if(isCorrectPassword) {
+			boolean isCorrectPassword = bCryptPasswordEncoder.matches(new String(password),
+					resultSet.getString("password"));
+
+			if (isCorrectPassword) {
 				User user = new User();
 				user.setId(resultSet.getInt("id"));
 				user.setFirstName(resultSet.getString("first_name"));
@@ -232,7 +231,7 @@ public class User {
 				user.setDescription(resultSet.getString("description"));
 				user.setEmail(resultSet.getString("email"));
 				user.setCreatedAt(resultSet.getDate("created_at"));
-				
+
 				return user;
 			} else {
 				return null;
@@ -241,7 +240,6 @@ public class User {
 			return null;
 		}
 	}
-	
 
 	@Override
 	public String toString() {
@@ -250,6 +248,4 @@ public class User {
 				+ createdAt + "]";
 	}
 
-	
-	
 }

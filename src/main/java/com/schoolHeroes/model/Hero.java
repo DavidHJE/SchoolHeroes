@@ -9,8 +9,6 @@ import java.sql.Statement;
 
 import javax.swing.ImageIcon;
 
-import com.schoolHeroes.form.HeroList;
-
 public class Hero {
 	private String name;
 	private ClassHero classHero;

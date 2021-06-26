@@ -1,4 +1,4 @@
-package com.schoolHeroes.form;
+package com.schoolHeroes.view;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -6,6 +6,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 
 import com.schoolHeroes.model.User;
+import com.schoolHeroes.view.hero.HeroPanel;
+import com.schoolHeroes.view.user.ProfilePanel;
 
 @SuppressWarnings("serial")
 public class MainForm extends JFrame {

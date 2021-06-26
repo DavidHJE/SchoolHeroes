@@ -1,4 +1,4 @@
-package com.schoolHeroes.form;
+package com.schoolHeroes.view.hero;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +16,9 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import com.schoolHeroes.model.Hero;
+import com.schoolHeroes.model.HeroList;
+import com.schoolHeroes.model.interfaceModel.Observer;
+import com.schoolHeroes.utilities.HeroTableModel;
 
 @SuppressWarnings("serial")
 public class HeroPanel extends JPanel implements Observer {
