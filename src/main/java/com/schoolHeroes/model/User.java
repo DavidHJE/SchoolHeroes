@@ -7,12 +7,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class User {
 
-	private int id;
+	private int id = 0;
 	private String username;
 	private String password;
 	private String firstName;
@@ -29,12 +30,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getUsername() {
+		return username;
 	}
 
 	public void setUsername(String username) {
@@ -124,16 +125,19 @@ public class User {
 		pst.execute();
 	}
 
-	public void changePasswordAndSaveToDB() throws Exception {
+	public void changePasswordAndSaveToDB(char[] passordString) throws Exception {
 		if (this.id == 0) {
 			throw new Exception("This user don't have a id");
 		}
+
+		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+		String hashPassword = bCryptPasswordEncoder.encode(new String(passordString));
 
 		Database db = Database.getInstance();
 		Connection connexion = db.getConnexion();
 
 		PreparedStatement pst = connexion.prepareStatement("UPDATE public.users SET password=? WHERE id=?;");
-		pst.setString(1, this.password);
+		pst.setString(1, hashPassword);
 		pst.setInt(2, this.id);
 		pst.execute();
 	}
@@ -149,6 +153,29 @@ public class User {
 		PreparedStatement pst = connexion.prepareStatement("DELETE FROM public.users WHERE id=?;");
 		pst.setInt(1, this.id);
 		pst.execute();
+	}
+	
+	public boolean isCorrectPassword(char[] password) throws Exception {
+		if (this.id == 0) {
+			throw new Exception("This user don't have a id");
+		}
+		
+		Database db = Database.getInstance();
+		Connection connexion = db.getConnexion();
+		
+		PreparedStatement pst = connexion.prepareStatement("SELECT password FROM public.users WHERE id=?;");
+		pst.setInt(1, this.id);
+		ResultSet resultSet = pst.executeQuery();
+		
+		if(resultSet.next())  {
+			String passwordDb = resultSet.getString("password");
+			BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+			
+			return bCryptPasswordEncoder.matches(new String(password), passwordDb);
+
+		} else {
+			throw new Exception("Utilisateur inconnu");
+		}
 	}
 	
 	public static boolean isUsernameUnique(String username) throws Exception {

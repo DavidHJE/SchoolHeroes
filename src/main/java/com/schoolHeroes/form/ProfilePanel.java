@@ -1,14 +1,21 @@
 package com.schoolHeroes.form;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
+import com.schoolHeroes.model.User;
 
 public class ProfilePanel extends JPanel {
 	private JButton logOutButton;
@@ -34,7 +41,7 @@ public class ProfilePanel extends JPanel {
 	private JButton deleteButton;
 
 	
-	public ProfilePanel() {
+	public ProfilePanel(User user) {
 		setBounds(0, 0, 1000, 600);
 		setLayout(null);
 		
@@ -48,6 +55,7 @@ public class ProfilePanel extends JPanel {
 		
 		usernameField = new JTextField();
 		usernameField.setBounds(350, 50, 300, 25);
+		usernameField.setText(user.getUsername());
 		add(usernameField);
 		
 		lastNameLabel = new JLabel("Nom");
@@ -56,6 +64,7 @@ public class ProfilePanel extends JPanel {
 		
 		lastNameField = new JTextField();
 		lastNameField.setBounds(350, 100, 300, 25);
+		lastNameField.setText(user.getLastName());
 		add(lastNameField);
 		
 		firstNameLabel = new JLabel("Prénom");
@@ -64,6 +73,7 @@ public class ProfilePanel extends JPanel {
 		
 		firstNameField = new JTextField();
 		firstNameField.setBounds(350, 150, 300, 25);
+		firstNameField.setText(user.getFirstName());
 		add(firstNameField);
 		
 		mailLabel = new JLabel("Adresse e-mail");
@@ -72,6 +82,7 @@ public class ProfilePanel extends JPanel {
 		
 		mailField = new JTextField();
 		mailField.setBounds(350, 200, 300, 25);
+		mailField.setText(user.getEmail());
 		add(mailField);
 		
 		descriptionLabel = new JLabel("Description");
@@ -83,6 +94,7 @@ public class ProfilePanel extends JPanel {
 		add(descriptionScrollPane);
 		
 		descriptionField = new JTextArea();
+		descriptionField.setText(user.getDescription());
 		descriptionField.setLineWrap(true);
 		descriptionScrollPane.setViewportView(descriptionField);
 		
@@ -99,6 +111,108 @@ public class ProfilePanel extends JPanel {
 		deleteButton.setBackground(Color.RED.brighter());
 		deleteButton.setForeground(Color.WHITE);
 		add(deleteButton);
+		
+		heroListenerList(user);
+	}
+	
+	private void heroListenerList(final User user) {
+		logOutButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainForm mainForm = (MainForm) getRootPane().getParent();
+				LoginForm frame = new LoginForm();
+				mainForm.dispose();
+				frame.setVisible(true);
+			}
+		});
+		
+		changePasswordButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				UpdatePasswordForm dialog = new UpdatePasswordForm(user);
+				dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+				dialog.setVisible(true);
+			}
+		});
+		
+		editButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (usernameField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Le nom d'utilisateur ne doit pas être vide !",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				} 
+				
+				if (lastNameField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Le nom ne doit pas être vide !",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (firstNameField.getText().trim().equals("")) {
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Le prénom ne doit pas être vide !",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				boolean isUsernameUnique = false;
+				try {
+					isUsernameUnique = User.isUsernameUnique(usernameField.getText().trim(), user.getId());
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				
+				if(isUsernameUnique == false) {
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Veuillez choisir un autre nom d'utilisateur",
+							"Erreur", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				if (!mailField.getText().trim().equals("")) {
+					user.setEmail(mailField.getText());
+				}
+				
+				if (!descriptionField.getText().trim().equals("")) {
+					user.setDescription(descriptionField.getText());
+				}
+				
+				user.setUsername(usernameField.getText());
+				user.setFirstName(firstNameField.getText());
+				user.setLastName(lastNameField.getText());
+				
+				try {
+					user.updateAndSaveToDB();
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Modification réussi !");
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		
+		deleteButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Object[] options = { "Oui", "Non" };
+
+				int response = JOptionPane.showOptionDialog(ProfilePanel.this,
+						"Voulez vous vraiment suprimer ce compte ?", "Supprimer ce compte",
+						JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+				if (response == 1) {
+					return;
+				}
+				
+				try {
+					user.deleteFromDB();
+
+					JOptionPane.showMessageDialog(ProfilePanel.this, "Votre compte a été supprimer avec succès.");
+					
+					MainForm mainForm = (MainForm) getRootPane().getParent();
+					LoginForm frame = new LoginForm();
+					mainForm.dispose();
+					frame.setVisible(true);
+					
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 	}
 
 }
