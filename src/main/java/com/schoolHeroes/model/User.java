@@ -85,8 +85,10 @@ public class User {
 
 		Statement st = connexion.createStatement();
 		ResultSet result = st.executeQuery("SELECT max(id) FROM public.users;");
-		result.next();
-		int lastId = result.getInt(1) + 1;
+		int lastId = 1;
+		if(result.next()) {
+			lastId = result.getInt(1) + 1;			
+		}
 		this.id = lastId;
 
 		PreparedStatement pst = connexion.prepareStatement(
